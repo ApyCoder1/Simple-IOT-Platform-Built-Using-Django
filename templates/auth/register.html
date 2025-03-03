@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        /* Center the auth container */
+        .auth-container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            transition: 0.3s ease-in-out;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            font-size: 26px;
+            letter-spacing: 1px;
+        }
+
+        /* Form Styling */
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        input {
+            margin: 10px 0;
+            padding: 14px;
+            border: none;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 16px;
+            transition: 0.3s;
+            outline: none;
+            width: 100%;
+        }
+
+        input:focus {
+            background: rgba(255, 255, 255, 0.3);
+            border-left: 4px solid #00d4ff;
+            padding-left: 16px;
+        }
+
+        /* Button Styling */
+        button {
+            background: #00d4ff;
+            color: white;
+            padding: 14px;
+            font-size: 18px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        button:hover {
+            background: #0077b6;
+            transform: scale(1.05);
+        }
+
+        /* Links */
+        p {
+            margin-top: 15px;
+            font-size: 15px;
+        }
+
+        a {
+            color: #00d4ff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Messages */
+        .messages {
+            list-style: none;
+            padding: 0;
+            margin: 10px 0;
+        }
+
+        .messages li {
+            background: #ff4747;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .auth-container {
+                max-width: 90%;
+                padding: 20px;
+            }
+
+            h2 {
+                font-size: 22px;
+            }
+
+            input {
+                font-size: 14px;
+                padding: 12px;
+            }
+
+            button {
+                font-size: 16px;
+                padding: 12px;
+            }
+
+            p {
+                font-size: 13px;
+            }
+        }
+
+        /* Responsive for larger screens */
+        @media (min-width: 1200px) {
+            .auth-container {
+                max-width: 600px;
+                padding: 40px;
+            }
+
+            h2 {
+                font-size: 28px;
+            }
+
+            input {
+                font-size: 18px;
+                padding: 16px;
+            }
+
+            button {
+                font-size: 20px;
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <h2>Register</h2>
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Register</button>
+        </form>
+        <p>Already have an account? <a href="{% url 'login' %}">Login</a></p>
+    </div>
+</body>
+</html>

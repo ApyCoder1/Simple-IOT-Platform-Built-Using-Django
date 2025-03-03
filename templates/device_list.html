@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Devices</title>
+    <style>
+        /* General styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        header {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 1em 0;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+
+        /* Container for the devices */
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 2em auto;
+            padding: 1em;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Device list styles */
+        .device-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            justify-items: center;
+            margin-bottom: 20px;
+        }
+
+        .device-card {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s;
+            width: 100%;
+            max-width: 280px;
+        }
+
+        .device-card:hover {
+            transform: scale(1.05);
+        }
+
+        .device-card h3 {
+            margin-top: 0;
+            color: #333;
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .device-card p {
+            color: #555;
+            font-size: 0.9em;
+        }
+
+        .api-key-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #f1f1f1;
+            padding: 10px;
+            border-radius: 5px;
+            color: #333;
+            font-family: 'Courier New', Courier, monospace;
+            margin-top: 10px;
+            word-wrap: break-word;
+            font-size: 1em;
+        }
+
+        .copy-icon {
+            cursor: pointer;
+            color: #4CAF50;
+            font-size: 1.5em;
+            transition: color 0.3s;
+        }
+
+        .copy-icon:hover {
+            color: #45a049;
+        }
+
+        /* Button styles */
+        .btn {
+            display: inline-block;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            font-size: 1.2em;
+            margin-top: 20px;
+            text-align: center;
+            transition: background-color 0.3s;
+            margin-left: auto;
+            margin-right: auto;
+            display: block;
+        }
+
+        .btn:hover {
+            background-color: #45a049;
+        }
+
+        /* Toggle Button */
+        .toggle-button {
+            background-color: #008CBA;
+            color: white;
+            text-decoration: none;
+            padding: 10px 16px;
+            border-radius: 5px;
+            font-size: 1em;
+            display: inline-block;
+            margin-top: 10px;
+            transition: background-color 0.3s, transform 0.3s;
+            width: 100%;
+            max-width: 200px;
+            margin: 10px auto;
+        }
+
+        .toggle-button:hover {
+            background-color: #0074a6;
+            transform: scale(1.05);
+        }
+
+        /* Delete Button */
+        .delete-button {
+            background-color: #FF6347;
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            font-size: 1em;
+            text-align: center;
+            display: inline-block;
+            margin-top: 15px;
+            transition: background-color 0.3s, transform 0.3s;
+            width: 100%;
+            max-width: 200px;
+            margin: 10px auto;
+        }
+
+        .delete-button:hover {
+            background-color: #ff4d39;
+            transform: scale(1.05);
+        }
+
+        .empty-message {
+            text-align: center;
+            color: #888;
+            font-size: 1.2em;
+            margin-top: 20px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            header {
+                padding: 0.8em 0;
+            }
+            h2 {
+                font-size: 2em;
+            }
+            .device-card h3 {
+                font-size: 1.2em;
+            }
+            .btn {
+                padding: 10px 20px;
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h2> Devices</h2>
+    </header>
+
+    <div class="container">
+        {% if devices %}
+            <div class="device-list">
+                {% for device in devices %}
+                    <div class="device-card">
+                        <h3>{{ device.device_name }}</h3>
+                        <p>API Key:</p>
+                        <div class="api-key-container">
+                            <span class="api-key">{{ device.api_key }}</span>
+                            <span class="copy-icon" onclick="copyToClipboard('{{ device.api_key }}')">📋</span>
+                        </div>
+
+                        <p>Status: <strong>
+                            {% if device.is_active %}
+                                Active
+                            {% else %}
+                                Inactive
+                            {% endif %}
+                        </strong></p>
+
+                        <!-- Activate / Deactivate Button -->
+                        <a href="{% url 'toggle_device_activation' device.id %}" class="toggle-button">
+                            {% if device.is_active %}
+                                Deactivate
+                            {% else %}
+                                Activate
+                            {% endif %}
+                        </a>
+
+                        <a href="{% url 'delete_device' device.id %}" class="delete-button">Delete</a>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="empty-message">No devices added yet.</p>
+        {% endif %}
+        <a href="{% url 'add_device' %}" class="btn">Add New Device</a>
+    </div>
+
+    <script>
+        // Function to copy API Key to clipboard
+        function copyToClipboard(apiKey) {
+            const tempInput = document.createElement('input');
+            tempInput.value = apiKey;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            alert('API Key copied to clipboard!');
+        }
+    </script>
+</body>
+</html>

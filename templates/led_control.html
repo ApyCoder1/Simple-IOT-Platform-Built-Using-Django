@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LED Control</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #111;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background:#fff;;
+        }
+
+        .container {
+            background-color: #222;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            width: 450px;
+        }
+
+        h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #fff;
+            letter-spacing: 2px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .add-device-link {
+            color: #28a745;
+            font-size: 28px;
+            text-decoration: none;
+            border: 2px solid #28a745;
+            padding: 10px;
+            border-radius: 50%;
+            transition: background-color 0.3s ease;
+        }
+
+        .add-device-link:hover {
+            background-color: #28a745;
+            color: #fff;
+        }
+
+        .device-select {
+            margin-bottom: 20px;
+        }
+
+        .device-select select {
+            padding: 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            background-color: #444;
+            color: #fff;
+            width: 100%;
+            transition: background-color 0.3s ease;
+        }
+
+        .device-select select:focus {
+            background-color: #555;
+        }
+
+        .led-button {
+            padding: 15px 30px;
+            margin: 15px;
+            cursor: pointer;
+            font-size: 22px;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .on {
+            background-color: #28a745;
+        }
+
+        .off {
+            background-color: #dc3545;
+        }
+
+        .led-button:hover {
+            transform: scale(1.1);
+        }
+
+        .led-button:active {
+            transform: scale(0.95);
+        }
+
+        .led-button:focus {
+            outline: none;
+        }
+
+        .status-label {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: #ccc;
+            display: block;
+        }
+
+        .led-control-wrapper {
+            margin-bottom: 25px;
+        }
+
+        .icon {
+            font-size: 32px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>
+            LED Control Dashboard
+            <a href="{% url 'add_device' %}" class="add-device-link">+</a>
+        </h1>
+
+        <!-- Device Selection Dropdown -->
+        <form method="get" action="{% url 'led_control' %}" id="device-form">
+            <div class="device-select">
+                <label for="device">Select Device:</label>
+                <select name="device" id="device" onchange="autoSubmitForm()">
+                    <option value="">--Select a Device--</option>
+                    {% for device in devices %}
+                        <option value="{{ device.id }}" {% if device.id == selected_device.id %}selected{% endif %}>
+                            {{ device.device_name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+        </form>
+
+        <!-- LED Control Form -->
+        {% if selected_device %}
+            <form method="post">
+                {% csrf_token %}
+                <div class="led-control-wrapper">
+                    <span class="status-label">LED 1:</span>
+                    <button type="submit" name="led1" class="led-button {% if selected_device.led1_status %}on{% else %}off{% endif %}">
+                        <i class="fas {% if selected_device.led1_status %}fa-lightbulb{% else %}fa-lightbulb-slash{% endif %} icon"></i>
+                        <span>{% if selected_device.led1_status %}ON{% else %}OFF{% endif %}</span>
+                    </button>
+                </div>
+                <div class="led-control-wrapper">
+                    <span class="status-label">LED 2:</span>
+                    <button type="submit" name="led2" class="led-button {% if selected_device.led2_status %}on{% else %}off{% endif %}">
+                        <i class="fas {% if selected_device.led2_status %}fa-lightbulb{% else %}fa-lightbulb-slash{% endif %} icon"></i>
+                        <span>{% if selected_device.led2_status %}ON{% else %}OFF{% endif %}</span>
+                    </button>
+                </div>
+                <div class="led-control-wrapper">
+                    <span class="status-label">LED 3:</span>
+                    <button type="submit" name="led3" class="led-button {% if selected_device.led3_status %}on{% else %}off{% endif %}">
+                        <i class="fas {% if selected_device.led3_status %}fa-lightbulb{% else %}fa-lightbulb-slash{% endif %} icon"></i>
+                        <span>{% if selected_device.led3_status %}ON{% else %}OFF{% endif %}</span>
+                    </button>
+                </div>
+            </form>
+        {% endif %}
+    </div>
+
+    <script>
+        // JavaScript function to automatically submit the form when a device is selected
+        function autoSubmitForm() {
+            var deviceSelect = document.getElementById('device');
+            if (deviceSelect.value !== "") {
+                document.getElementById('device-form').submit();
+            }
+        }
+    </script>
+</body>
+</html>
