@@ -29,8 +29,8 @@ This is a simple yet powerful IoT platform built using Django, allowing users to
 ## Installation  
 1. Clone the repository:  
    ```bash
-   git clone https://github.com/yourusername/iot-platform.git
-   cd iot-platform
+   git clone https://github.com/ApyCoder1/Simple-IOT-Platform-Built-Using-Django/
+  
    ```  
 2. Install dependencies:  
    ```bash
